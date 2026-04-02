@@ -10,6 +10,10 @@ param uniqueSuffix string = uniqueString(resourceGroup().id)
 @description('Container image to deploy')
 param containerImage string = 'ghcr.io/YOUR_GITHUB_USERNAME/YOUR_REPO_NAME:latest'
 
+@description('GitHub Personal Access Token for GHCR')
+@secure()
+param githubToken string
+
 @description('Gemini API Key')
 @secure()
 param geminiApiKey string
@@ -64,10 +68,20 @@ resource containerAppJob 'Microsoft.App/jobs@2023-05-01' = {
       replicaTimeout: 1800 // 30 minutes max runtime
       replicaRetryLimit: 1
       
-      // Container registry (GitHub Container Registry - free)
-      registries: []
+      // GitHub Container Registry authentication
+      registries: [
+        {
+          server: 'ghcr.io'
+          username: 'asifj'
+          passwordSecretRef: 'ghcr-token'
+        }
+      ]
       
       secrets: [
+        {
+          name: 'ghcr-token'
+          value: githubToken
+        }
         {
           name: 'gemini-api-key'
           value: geminiApiKey

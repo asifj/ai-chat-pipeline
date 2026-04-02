@@ -70,6 +70,7 @@ jobs:
             --template-file infrastructure/main.bicep \
             --parameters \
               containerImage="${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest" \
+              githubToken="${{ secrets.GITHUB_TOKEN }}" \
               geminiApiKey="${{ secrets.GEMINI_API_KEY }}" \
               dropboxRefreshToken="${{ secrets.DROPBOX_REFRESH_TOKEN }}" \
               dropboxAppKey="${{ secrets.DROPBOX_APP_KEY }}" \
