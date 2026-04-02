@@ -75,8 +75,8 @@ jobs:
               dropboxRefreshToken="${{ secrets.DROPBOX_REFRESH_TOKEN }}" \
               dropboxAppKey="${{ secrets.DROPBOX_APP_KEY }}" \
               dropboxAppSecret="${{ secrets.DROPBOX_APP_SECRET }}" \
-              sourceRoot="/Apps/obsidian_db_pusher/AI_logs" \
-              outputRoot="/Apps/obsidian_db_pusher/Obsidian/AI_Chats"
+              sourceRoot="/AI_logs" \
+              outputRoot="/Obsidian/AI_Chats"
 
       - name: Get Job Details
         run: |
