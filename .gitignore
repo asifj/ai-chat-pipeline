@@ -1,0 +1,11 @@
+__pycache__/
+*.pyc
+.env
+.DS_Store
+*.log
+venv/
+.venv/
+
+# Azure secrets (DO NOT COMMIT)
+infrastructure/parameters.filled.json
+infrastructure/*.local.json
