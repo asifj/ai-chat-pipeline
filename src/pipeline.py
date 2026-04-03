@@ -43,7 +43,6 @@ except ImportError:
     try:
         import google.generativeai as genai_legacy
     except ImportError:
-from dropbox_logging import setup_logging_with_dropbox
         print("Missing dependency: pip install google-genai pyyaml")
         sys.exit(1)
 
