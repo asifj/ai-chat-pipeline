@@ -1,0 +1,54 @@
+--- a/src/pipeline.py
++++ b/src/pipeline.py
+@@ -43,6 +43,8 @@ except ImportError:
+ import dropbox
+ from dropbox.exceptions import ApiError
+ from dropbox.files import WriteMode
++
++from dropbox_logging import setup_logging_with_dropbox
+ 
+ # ---------------------------------------------------------------------------
+ # Configuration from environment
+@@ -497,10 +499,21 @@ def discover_files(dbx: dropbox.Dropbox) -> list[dict]:
+ 
+ def run_pipeline():
+     dbx = init_dropbox()
++    
++    # Setup Dropbox logging
++    dropbox_handler, log_path = setup_logging_with_dropbox(dbx)
++    log.info("="*60)
++    log.info("AI Chat Pipeline Started")
++    log.info(f"Log file: {log_path}")
++    log.info(f"SOURCE_ROOT: {SOURCE_ROOT}")
++    log.info(f"OUTPUT_ROOT: {OUTPUT_ROOT}")
++    log.info("="*60)
++    
+     manifest = load_manifest(dbx)
+     processed = manifest.get("processed", {})
+ 
+     all_files = discover_files(dbx)
++    log.info(f"Discovered {len(all_files)} total markdown files")
++    
+     log.info(f"Discovered {len(all_files)} total chat files")
+ 
+     to_process = []
+@@ -566,7 +579,14 @@ def run_pipeline():
+ 
+     build_moc_index(dbx)
+     build_topic_indexes(dbx)
++    
++    log.info("="*60)
++    log.info("Pipeline Complete")
++    log.info("="*60)
++    
++    # Flush logs to Dropbox
++    dropbox_handler.flush_to_dropbox()
+ 
+ 
+ if __name__ == "__main__":
+-    run_pipeline()
++    try:
++        run_pipeline()
++    except Exception as e:
++        log.exception("Pipeline failed with error")
++        raise
